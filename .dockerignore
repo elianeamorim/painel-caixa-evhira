@@ -1,0 +1,14 @@
+.venv
+.git
+.env
+.env.*
+!.env.example
+00_GENESIS
+z_Versoes
+testes
+scripts
+__pycache__
+*.pyc
+*.zip
+*.bat
+CLAUDE.md

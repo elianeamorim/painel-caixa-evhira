@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="aviso-demo" role="note">
+  <i class="ph ph-info"></i>
+  <span>Dados de exemplo de uma fábrica fictícia, a Sabor da Serra Alimentos. {{ d.mes }}.</span>
+</div>
+
+<section class="mg-kpis" aria-label="Resumo do mês">
+  <div class="mg-kpi ac-ent">
+    <div class="ico"><i class="ph ph-arrow-circle-down"></i></div>
+    <div class="corpo">
+      <div class="lbl">Entrou no mês</div>
+      <div class="val" data-centavos="{{ d.entrou }}">{{ d.entrou|moeda }}</div>
+      <div class="disc">Tudo que os clientes pagaram em {{ d.mes|lower }}.</div>
+    </div>
+  </div>
+
+  <div class="mg-kpi ac-pag">
+    <div class="ico"><i class="ph ph-receipt"></i></div>
+    <div class="corpo">
+      <div class="lbl">A pagar nos próximos 30 dias</div>
+      <div class="val" data-centavos="{{ d.a_pagar_total }}">{{ d.a_pagar_total|moeda }}</div>
+      <div class="disc">{{ d.a_pagar|length }} contas com vencimento até {{ d.limite }}.</div>
+    </div>
+  </div>
+
+  <div class="mg-kpi ac-saldo">
+    <div class="ico"><i class="ph ph-wallet"></i></div>
+    <div class="corpo">
+      <div class="lbl">Saldo nas contas</div>
+      <div class="val" data-centavos="{{ d.saldo_total }}">{{ d.saldo_total|moeda }}</div>
+      <div class="disc">Soma do que está nos bancos e no caixa.</div>
+      <ul class="saldos">
+        {% for s in d.saldos %}
+        <li><span>{{ s.nome }}</span><strong>{{ s.centavos|moeda }}</strong></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mg-kpi ac-meta" id="kpiMeta" data-entrou="{{ d.entrou }}" data-meta-padrao="{{ d.meta_padrao }}">
+    <div class="ico"><i class="ph ph-target"></i></div>
+    <div class="corpo">
+      <div class="lbl">Falta vender pra meta</div>
+      <div class="val" id="kpiMetaVal">{{ (d.meta_padrao - d.entrou)|moeda }}</div>
+      <div class="disc" id="kpiMetaDisc"></div>
+      <div class="progresso" id="kpiMetaBarra" role="progressbar" aria-label="Quanto da meta já entrou" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+    </div>
+  </div>
+</section>
+
+<form class="cd meta-bar" id="formMeta" novalidate>
+  <div class="campo campo-meta">
+    <label for="metaValor">Meta de vendas do mês</label>
+    <div class="input-moeda">
+      <span class="input-pref" aria-hidden="true">R$</span>
+      <input class="input" id="metaValor" name="meta" type="text" inputmode="decimal" autocomplete="off" aria-describedby="metaAjuda metaMsg">
+    </div>
+  </div>
+  <div class="campo meta-acao">
+    <button type="submit" class="btn btn-primary"><i class="ph-bold ph-floppy-disk"></i>Salvar meta</button>
+  </div>
+  <p class="meta-ajuda" id="metaAjuda">Digite quanto você quer receber neste mês, por exemplo 400.000. Fica guardado só neste navegador.</p>
+  <p class="campo-msg" id="metaMsg" role="status" aria-live="polite"></p>
+</form>
+
+<div class="painel-2col">
+  <section class="cd" aria-labelledby="tGrupos">
+    <div class="cd-header">
+      <h3 class="cd-titulo" id="tGrupos">Pra onde foi o dinheiro</h3>
+      <span class="cd-nota">Saídas de {{ d.mes|lower }}</span>
+    </div>
+    <ul class="barras">
+      {% for g in d.por_grupo %}
+      <li class="barra-linha" style="--c: var(--{{ g.cor }})">
+        <span class="barra-ico"><i class="ph {{ g.icone }}"></i></span>
+        <span class="barra-nome">{{ g.nome }}</span>
+        <span class="barra-valor">{{ g.centavos|moeda }} <small>{{ (g.centavos * 100 / d.saiu)|round|int }}%</small></span>
+        <span class="barra-trilho"><span class="barra-fill" style="--p: {{ (g.centavos * 100 / d.maior_grupo)|round(1) }}%"></span></span>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="cd-total"><span>Total que saiu</span><strong>{{ d.saiu|moeda }}</strong></div>
+  </section>
+
+  <section class="cd" aria-labelledby="tCanais">
+    <div class="cd-header">
+      <h3 class="cd-titulo" id="tCanais">De onde veio</h3>
+      <span class="cd-nota">Entradas de {{ d.mes|lower }}</span>
+    </div>
+    <ul class="barras">
+      {% for c in d.por_canal %}
+      <li class="barra-linha" style="--c: var(--{{ c.cor }})">
+        <span class="barra-ico"><i class="ph {{ c.icone }}"></i></span>
+        <span class="barra-nome">{{ c.nome }}</span>
+        <span class="barra-valor">{{ c.centavos|moeda }} <small>{{ (c.centavos * 100 / d.entrou)|round|int }}%</small></span>
+        <span class="barra-trilho"><span class="barra-fill" style="--p: {{ (c.centavos * 100 / d.maior_canal)|round(1) }}%"></span></span>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="cd-total"><span>Total que entrou</span><strong>{{ d.entrou|moeda }}</strong></div>
+  </section>
+</div>
+
+<section class="cd" aria-labelledby="tSemanas">
+  <div class="cd-header">
+    <h3 class="cd-titulo" id="tSemanas">Entrou e saiu por semana</h3>
+    <span class="cd-nota">Valores em milhares de reais</span>
+  </div>
+  <div class="legenda">
+    <span class="leg-item ent"><i></i>Entrou</span>
+    <span class="leg-item sai"><i></i>Saiu</span>
+  </div>
+  <div class="semanas" role="group" aria-label="Entrou e saiu por semana, em milhares de reais">
+    {% for s in d.semanas %}
+    <div class="sem">
+      <div class="sem-barras">
+        <div class="col ent" style="--h: {{ (s.entrou * 100 / d.maior_semana)|round(1) }}%" title="Entrou {{ s.entrou|moeda }}"><span class="col-val">{{ s.entrou|mil }}</span></div>
+        <div class="col sai" style="--h: {{ (s.saiu * 100 / d.maior_semana)|round(1) }}%" title="Saiu {{ s.saiu|moeda }}"><span class="col-val">{{ s.saiu|mil }}</span></div>
+      </div>
+      <div class="sem-rotulo">Dias {{ s.rotulo }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<div class="tabela-wrap" data-tabela data-pref-key="proximas_contas" data-titulo="Próximas contas a pagar" data-busca-global>
+  <div class="tabela-scroll">
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th data-col-key="vencimento" data-tipo="data">Vencimento</th>
+          <th data-col-key="fornecedor">Fornecedor</th>
+          <th data-col-key="grupo">Grupo</th>
+          <th data-col-key="conta">Conta</th>
+          <th data-col-key="valor" data-tipo="num" class="num">Valor</th>
+          <th data-col-key="prazo" data-tipo="num">Prazo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in d.a_pagar %}
+        <tr data-vencimento="{{ c.data.isoformat() }}" data-valor="{{ c.centavos|reais_num }}" data-prazo="{{ c.em_dias }}"
+            data-busca="{{ c.fornecedor }} {{ c.grupo }} {{ c.conta }}">
+          <td>{{ c.data.strftime("%d/%m/%Y") }}</td>
+          <td>{{ c.fornecedor }}</td>
+          <td><span class="chip" style="--c: var(--{{ c.cor }})"><i class="ph {{ c.icone }}"></i>{{ c.grupo }}</span></td>
+          <td>{{ c.conta }}</td>
+          <td class="num">{{ c.centavos|moeda }}</td>
+          <td>{{ c.em_dias|prazo }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tabela-avancada.js') }}"></script>
+<script src="{{ url_for('static', filename='js/painel.js') }}"></script>
+{% endblock %}

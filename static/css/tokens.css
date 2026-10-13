@@ -1,0 +1,47 @@
+/* Unico lugar onde cor e medida sao escritas. Rampa gerada por paleta.py a partir do dourado da marca. */
+:root {
+  --bg: #010715;
+  --bg-elev: #07101f;
+  --surface: #0F1829;
+  --surface-glass: rgba(15, 24, 41, 0.6);
+  --border: #1f2a3f;
+  --text: #F5F0E8;
+  --text-dim: #9aa3b2;
+
+  --accent: #C9A84C;
+  --accent-hover: #D2B76B;
+  --accent-escura: #8E742B;
+  --accent-suave: #F8F4E7;
+  --accent-soft: rgba(201, 168, 76, 0.12);
+  --accent-sombra: rgba(201, 168, 76, 0.15);
+  --accent-texto: #866E29;
+  --texto-sobre-accent: #000000;
+
+  --success: #2ecc71;
+  --danger: #e74c3c;
+  --warning: #f1c40f;
+
+  --font: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-titulo: "Sora", "Inter", sans-serif;
+
+  --fs-xs: 12px; --fs-sm: 13px; --fs-base: 15px;
+  --fs-lg: 16px; --fs-xl: 20px; --fs-2xl: 26px;
+
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px;
+  --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+
+  --radius: 10px; --radius-sm: 6px; --radius-lg: 16px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --overlay: rgba(0, 0, 0, 0.55);
+  --transicao: .18s ease;
+
+  /* grupos de saída e canais de entrada do Painel: uma cor por grupo, em tons que convivem com o dourado */
+  --grp-impostos: #8FA3C7; --grp-producao: #D98E5F; --grp-frete: #6FB7A8; --grp-fixas: #A58FD1;
+  --grp-marketing: #D67A9A; --grp-admin: #8DB26B; --grp-qualidade: #5FB3D6; --grp-invest: #B7A58A;
+  --text-fraco: #8590a2;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --h-controle: 40px;
+
+  --sidebar-w: 248px;
+  --topbar-h: 58px;
+}

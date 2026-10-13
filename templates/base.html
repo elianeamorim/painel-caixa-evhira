@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ titulo }} | Painel de Caixa Évhira</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fonts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='phosphor/regular/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='phosphor/bold/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='phosphor/fill/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tabela.css') }}">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-marca">
+      <div class="logo-quadro"><i class="ph ph-bank"></i></div>
+      <div>
+        <div class="marca-nome">Painel de Caixa</div>
+        <div class="marca-sub">Évhira</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Menu principal">
+      <a class="nav-item {{ 'ativo' if ativo == 'painel' }}" href="/painel"><i class="ph ph-squares-four"></i><span>Painel</span></a>
+      <a class="nav-item {{ 'ativo' if ativo == 'conferir' }}" href="/conferir"><i class="ph ph-scales"></i><span>Conferir com o banco</span></a>
+      <a class="nav-item {{ 'ativo' if ativo == 'como' }}" href="/como-funciona"><i class="ph ph-info"></i><span>Como funciona</span></a>
+    </nav>
+    <div class="sidebar-rodape"></div>
+  </aside>
+  <div class="overlay-mob" id="overlayMob"></div>
+
+  <div class="conteudo">
+    <header class="topbar">
+      <div class="tb-titulo">
+        <button type="button" class="btn btn-fantasma btn-menu" id="btnMenu" title="Abrir o menu" aria-label="Abrir o menu" aria-controls="sidebar" aria-expanded="false"><i class="ph ph-list"></i></button>
+        <span class="titulo-pagina">{{ titulo }}</span>
+      </div>
+      <div class="tb-acoes">{% block topo_acoes %}{% endblock %}</div>
+    </header>
+    <main class="pagina">{% block conteudo %}{% endblock %}</main>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

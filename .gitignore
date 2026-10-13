@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.log
+
+# Versoes e registros: nao versionam junto
+z_Versoes/
+00_GENESIS/
+backups/
+gerar_versao.bat
+gerar_versao.command
+restaurar_ultima_versao.bat
+restaurar_ultima_versao.command
