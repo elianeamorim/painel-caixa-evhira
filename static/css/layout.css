@@ -65,7 +65,12 @@ body.drawer-aberto { overflow: hidden; }
   .sidebar { transform: translateX(-100%); }
   .sidebar.aberta { transform: translateX(0); }
   .conteudo { margin-left: 0; }
-  .topbar .btn-menu { display: inline-flex; }
+  .topbar .btn-menu {
+    display: inline-flex; width: 44px; height: 44px; min-height: 44px; padding: 0; flex-shrink: 0;
+    border: 1px solid var(--border); background: var(--bg-elev); color: var(--text-dim);
+  }
+  .topbar .btn-menu i { font-size: 18px; }
+  .topbar .btn-menu:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-elev); }
   .overlay-mob.visivel { display: block; }
   .pagina { padding: 18px 16px 50px; }
   .topbar { padding: 0 16px; }

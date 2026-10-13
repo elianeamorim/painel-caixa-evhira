@@ -6,7 +6,7 @@ Tempo: uns 20 minutos. Você clica, eu fico por perto. Se qualquer passo der dif
 
 1. Abra https://github.com/new
 2. Em "Repository name" escreva: `painel-caixa-evhira`
-3. Marque **Private** (privado). Não marque nenhuma caixinha de README.
+3. Marque **Public** (público). Privado faz o EasyPanel pedir uma chave extra e travar. O app só tem dados fictícios e nenhuma senha, então é seguro. Não marque nenhuma caixinha de README.
 4. Clique em **Create repository**.
 5. Abra o terminal na pasta do projeto e rode os comandos abaixo, **um de cada vez** (troque `SEU-USUARIO` pelo seu usuário do GitHub, o mesmo do outro app: `elianeamorim`).
 
