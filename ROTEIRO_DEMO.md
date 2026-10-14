@@ -52,6 +52,7 @@ Faça e anote as respostas na tabela abaixo:
 - **"Meus dados ficam guardados?"** Não. O arquivo é lido, o resultado aparece e tudo é descartado.
 - **"Funciona com o meu sistema?"** Funciona com planilha de qualquer sistema (xlsx ou csv) e extrato do banco (OFX, xlsx ou csv). Se o arquivo não for reconhecido, o app avisa e oferece um modelo de planilha.
 - **"E quando um débito paga várias contas juntas?"** Esse caso ainda não é casado. Aparece como "só de um lado". É um limite conhecido da primeira versão.
+- **"Esse número do Painel vem de onde?"** Aqui é um exemplo: os números são inventados e fixos. No negócio dele, viriam dos arquivos dele: o que entrou, das vendas ou do extrato do banco; o que tem a pagar, do relatório de contas a pagar do sistema da contabilidade; o saldo, do extrato do banco. Só a meta do mês é digitada pelo dono. Quem lê arquivo de verdade hoje é a conferência com o banco.
 - **"É de graça? Quando fica pronto de verdade?"** Hoje é uma demonstração. Anote o interesse e diga que volta com a versão com os dados dele.
 
 ## Plano B: sem internet
