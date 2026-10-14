@@ -5,6 +5,7 @@
 !.env.example
 00_GENESIS
 z_Versoes
+backups
 testes
 scripts
 __pycache__

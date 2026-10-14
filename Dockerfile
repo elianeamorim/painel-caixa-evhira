@@ -1,4 +1,4 @@
-# Imagem mínima da prévia (a versão final com todos os ajustes vem na Fase 6)
+# Painel de Caixa Évhira: imagem de produção (Python 3.12, usuário sem privilégio, gunicorn)
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
