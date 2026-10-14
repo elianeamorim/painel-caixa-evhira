@@ -230,3 +230,8 @@
   .titulo-pagina { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .spinner-circle, .girando { animation-duration: 2s; } }
+
+/* ---------- Como funciona ---------- */
+.cf-lista { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: var(--sp-2); }
+.cf-lista strong { color: var(--text); }
+.cd p { margin: 0; line-height: 1.55; }

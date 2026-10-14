@@ -124,6 +124,11 @@ def _resultado(lancamentos, extrato):
     return r
 
 
+@app.get("/como-funciona")
+def como_funciona():
+    return render_template("como_funciona.html", ativo="como", titulo="Como funciona")
+
+
 @app.get("/health")
 def health():
     return jsonify(status="ok")

@@ -309,6 +309,13 @@ def test_upload_nao_grava_nem_usa_nome_do_arquivo_e_dom_so_por_textcontent():
     assert not re.search(r"innerHTML|insertAdjacentHTML|outerHTML|document\.write|\balert\(|\bconfirm\(|\bprompt\(", js)
 
 
+def test_como_funciona_responde_com_os_3_blocos_sem_travessao():
+    r = _cliente().get("/como-funciona")
+    html = r.get_data(as_text=True)
+    assert r.status_code == 200 and html.count('class="cd"') == 3
+    assert "nada fica guardado" in html.lower() and "—" not in html
+
+
 if __name__ == "__main__":
     testes = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     falhas = 0

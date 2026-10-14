@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<section class="cd" aria-labelledby="tPainel">
+  <h3 class="cd-titulo" id="tPainel"><i class="ph ph-gauge"></i> O que cada número do Painel quer dizer</h3>
+  <ul class="cf-lista">
+    <li><strong>Entrou no mês:</strong> tudo que os clientes pagaram desde o dia 1.</li>
+    <li><strong>A pagar nos próximos 30 dias:</strong> as contas que vencem no próximo mês, somadas.</li>
+    <li><strong>Saldo nas contas:</strong> o dinheiro que está agora nos bancos e no caixa.</li>
+    <li><strong>Falta vender pra meta:</strong> a meta que você digita menos o que já entrou. Dá pra mudar a meta na hora.</li>
+  </ul>
+  <p class="cd-nota">O Painel que você vê aqui usa dados inventados, de uma fábrica fictícia chamada Sabor da Serra Alimentos. Na versão real, ele usa os dados do seu próprio negócio.</p>
+</section>
+
+<section class="cd" aria-labelledby="tConferir">
+  <h3 class="cd-titulo" id="tConferir"><i class="ph ph-scales"></i> O que é conferir com o banco, e por que importa</h3>
+  <p>Quem cuida das suas contas lança no sistema o que foi pago. O banco tem o registro do que realmente saiu. Conferir é colocar os dois lado a lado e ver se contam a mesma história.</p>
+  <ul class="cf-lista">
+    <li><strong>Bateu:</strong> o valor lançado saiu igual no banco, em até 3 dias de diferença.</li>
+    <li><strong>Valor diferente:</strong> o pagamento existe nos dois lados, mas por valores diferentes.</li>
+    <li><strong>Só de um lado:</strong> foi lançado e não saiu no banco, ou saiu no banco e ninguém lançou.</li>
+  </ul>
+  <p>Você olha só o que não bateu. É aí que um erro vira prejuízo se ninguém vê.</p>
+  <p class="cd-nota">Limite de hoje: quando um único débito no banco paga várias contas de uma vez, o app ainda não consegue separar. Esse tipo de pagamento aparece como "só de um lado".</p>
+</section>
+
+<section class="cd" aria-labelledby="tArquivos">
+  <h3 class="cd-titulo" id="tArquivos"><i class="ph ph-shield-check"></i> O que acontece com os seus arquivos</h3>
+  <p>Nada fica guardado. O arquivo é lido, a conferência é feita e o resultado aparece na sua tela. Em seguida tudo é descartado. O app não tem cadastro, não pede senha e não grava o seu arquivo em lugar nenhum.</p>
+  <p>Aceita planilha (xlsx ou csv) do seu sistema e extrato do banco (OFX, xlsx ou csv), de até 5 MB cada. Se o arquivo não for reconhecido, o app avisa e oferece um modelo de planilha pra você preencher.</p>
+</section>
+{% endblock %}
