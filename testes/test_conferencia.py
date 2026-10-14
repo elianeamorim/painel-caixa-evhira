@@ -264,6 +264,51 @@ def test_codigo_sem_log_de_conteudo_nem_comando_perigoso():
         assert not achados, (arquivo.name, achados)
 
 
+# ---------- rotas da tela Conferir (Fase 4) ----------
+
+def _cliente():
+    from app import app
+    return app.test_client()
+
+
+def _envio(lancamentos, extrato):
+    return {"lancamentos": (io.BytesIO(lancamentos), "qualquer-nome.xlsx"), "extrato": (io.BytesIO(extrato), "outro-nome.ofx")}
+
+
+def test_rota_processar_com_amostras_devolve_os_3_grupos():
+    r = _cliente().post("/conferir/processar", data=_envio((AMOSTRAS / "lancamentos_omie_exemplo.xlsx").read_bytes(),
+                        (AMOSTRAS / "extrato_bancoA_exemplo.ofx").read_bytes()), content_type="multipart/form-data")
+    j = r.get_json()
+    assert r.status_code == 200 and r.headers["Cache-Control"] == "no-store"
+    assert (len(j["bateu"]), len(j["valor_diferente"]), len(j["so_um_lado"])) == (32, 2, 4)
+
+
+def test_rota_exemplo_devolve_os_3_grupos():
+    j = _cliente().post("/conferir/exemplo").get_json()
+    assert j["resumo"]["bateram"] == 52 and len(j["valor_diferente"]) == 2 and len(j["so_um_lado"]) == 5
+
+
+def test_rota_processar_erros_amigaveis():
+    c = _cliente()
+    ofx = (AMOSTRAS / "extrato_bancoA_exemplo.ofx").read_bytes()
+    r = c.post("/conferir/processar", data={"extrato": (io.BytesIO(ofx), "a.ofx")}, content_type="multipart/form-data")
+    assert r.status_code == 400 and r.get_json()["campo"] == "lancamentos"
+    r = c.post("/conferir/processar", data=_envio(b"texto solto\n", ofx), content_type="multipart/form-data")
+    j = r.get_json()
+    assert r.status_code == 422 and j["campo"] == "lancamentos" and "Traceback" not in j["erro"]
+    r = c.post("/conferir/processar", data=_envio(b"x" * (5 * 1024 * 1024 + 1), ofx), content_type="multipart/form-data")
+    assert r.status_code == 413 and "5 MB" in r.get_json()["erro"]
+    r = c.post("/conferir/processar", data=_envio(b"x" * (11 * 1024 * 1024), ofx), content_type="multipart/form-data")
+    assert r.status_code == 413 and r.is_json
+
+
+def test_upload_nao_grava_nem_usa_nome_do_arquivo_e_dom_so_por_textcontent():
+    app_py = (RAIZ / "app.py").read_text(encoding="utf-8")
+    assert ".save(" not in app_py and ".filename" not in app_py and "render_template_string" not in app_py
+    js = (RAIZ / "static" / "js" / "conferir.js").read_text(encoding="utf-8")
+    assert not re.search(r"innerHTML|insertAdjacentHTML|outerHTML|document\.write|\balert\(|\bconfirm\(|\bprompt\(", js)
+
+
 if __name__ == "__main__":
     testes = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]
     falhas = 0

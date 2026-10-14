@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block topo_acoes %}
+<button type="button" class="btn btn-primary btn-sm" id="btnConferir" disabled><i class="ph-bold ph-scales"></i><span>Conferir agora</span></button>
+{% endblock %}
+{% block conteudo %}
+<section class="cd im-card" aria-labelledby="tArquivos">
+  <div class="cd-header">
+    <h3 class="cd-titulo" id="tArquivos"><i class="ph ph-upload-simple"></i> Seus arquivos</h3>
+    <a class="btn btn-sm btn-secundario" href="/conferir/modelo.xlsx"><i class="ph ph-download-simple"></i>Baixar modelo</a>
+  </div>
+
+  <div class="im-grade">
+    <div class="im-bloco">
+      <span class="im-lbl">1. Lançamentos da contabilidade</span>
+      <label class="im-drop" for="inpLancamentos" data-campo="lancamentos">
+        <i class="ph ph-file-arrow-up"></i>
+        <div class="im-txt">Clique ou arraste o arquivo aqui</div>
+        <small class="im-arq"></small>
+        <small class="im-dica">Planilha do seu sistema (xlsx ou csv)</small>
+      </label>
+      <input class="im-inp" type="file" id="inpLancamentos" accept=".xlsx,.csv,.txt">
+    </div>
+    <div class="im-bloco">
+      <span class="im-lbl">2. Extrato do banco</span>
+      <label class="im-drop" for="inpExtrato" data-campo="extrato">
+        <i class="ph ph-file-arrow-up"></i>
+        <div class="im-txt">Clique ou arraste o arquivo aqui</div>
+        <small class="im-arq"></small>
+        <small class="im-dica">Extrato em OFX, xlsx ou csv</small>
+      </label>
+      <input class="im-inp" type="file" id="inpExtrato" accept=".ofx,.xlsx,.csv,.txt">
+    </div>
+  </div>
+
+  <div class="im-acao">
+    <span class="im-msg" id="imMsg" role="status" aria-live="polite"></span>
+    <button type="button" class="btn btn-secundario" id="btnExemplo"><i class="ph ph-flask"></i><span>Usar dados de exemplo</span></button>
+  </div>
+</section>
+
+<section id="areaResultado" aria-live="polite" aria-label="Resultado da conferência">
+  <div class="cd" id="vzInicio">
+    <div class="vz">
+      <i class="ph ph-scales vz-icone"></i>
+      <p class="vz-titulo">Nada conferido ainda</p>
+      <p class="vz-sub">Coloque os dois arquivos acima e toque em Conferir agora. Ou veja como funciona com os dados de exemplo.</p>
+    </div>
+  </div>
+
+  <div class="cd" id="vzCarregando" hidden>
+    <div class="loading-inline">
+      <div class="spinner-circle"></div>
+      <div class="loading-text">Cruzando lançamentos com o extrato</div>
+    </div>
+  </div>
+
+  <div class="cd" id="vzErro" hidden>
+    <div class="vz">
+      <i class="ph ph-file-x vz-icone"></i>
+      <p class="vz-titulo">Não consegui ler este arquivo</p>
+      <p class="vz-sub" id="vzErroTexto"></p>
+      <a class="btn btn-secundario vz-botao" href="/conferir/modelo.xlsx"><i class="ph ph-download-simple"></i>Baixar modelo</a>
+    </div>
+  </div>
+
+  <div id="resultado" hidden>
+    <p class="resumo-frase" id="resumoFrase"></p>
+    <div class="aviso-demo" id="avisoFora" role="note" hidden>
+      <i class="ph ph-info"></i>
+      <span id="avisoForaTexto"></span>
+    </div>
+
+    <div class="cf-tabs" role="tablist" aria-label="Resultado da conferência">
+      <button type="button" class="cf-tab ativo" role="tab" aria-selected="true" aria-controls="pane-bateu" id="tab-bateu" data-pane="bateu" style="--c: var(--success)"><i class="ph ph-check-circle"></i><span>Bateu</span><b class="cf-cont" id="cont-bateu">0</b></button>
+      <button type="button" class="cf-tab" role="tab" aria-selected="false" aria-controls="pane-diferente" id="tab-diferente" data-pane="diferente" style="--c: var(--warning)"><i class="ph ph-warning"></i><span>Valor diferente</span><b class="cf-cont" id="cont-diferente">0</b></button>
+      <button type="button" class="cf-tab" role="tab" aria-selected="false" aria-controls="pane-umlado" id="tab-umlado" data-pane="umlado" style="--c: var(--danger)"><i class="ph ph-x-circle"></i><span>Só de um lado</span><b class="cf-cont" id="cont-umlado">0</b></button>
+    </div>
+
+    <div class="cf-pane ativo" id="pane-bateu" role="tabpanel" aria-labelledby="tab-bateu">
+      <div class="cf-tabela" data-lugar></div>
+      <div class="cd" data-vazio hidden>
+        <div class="vz">
+          <i class="ph ph-tray vz-icone"></i>
+          <p class="vz-titulo">Nada bateu</p>
+          <p class="vz-sub">Nenhum lançamento encontrou o mesmo valor no extrato, em até 3 dias de diferença.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cf-pane" id="pane-diferente" role="tabpanel" aria-labelledby="tab-diferente" hidden>
+      <div class="cf-tabela" data-lugar></div>
+      <div class="cd" data-vazio hidden>
+        <div class="vz">
+          <i class="ph ph-check-circle vz-icone"></i>
+          <p class="vz-titulo">Nenhum valor diferente</p>
+          <p class="vz-sub">Todo pagamento que apareceu nos dois lados saiu pelo valor lançado.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cf-pane" id="pane-umlado" role="tabpanel" aria-labelledby="tab-umlado" hidden>
+      <div class="cf-tabela" data-lugar></div>
+      <div class="cd" data-vazio hidden>
+        <div class="vz">
+          <i class="ph ph-check-circle vz-icone"></i>
+          <p class="vz-titulo">Nada solto</p>
+          <p class="vz-sub">Tudo que foi lançado saiu no banco, e tudo que saiu no banco foi lançado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tabela-avancada.js') }}"></script>
+<script src="{{ url_for('static', filename='js/conferir.js') }}"></script>
+{% endblock %}

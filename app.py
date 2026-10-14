@@ -3,8 +3,11 @@ import os
 import secrets
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, redirect, render_template, send_file, url_for
+from flask import Flask, jsonify, redirect, render_template, request, send_file, url_for
 
+from core.conferencia import conferir
+from core.exemplo import dados_exemplo
+from core.leitores import ErroArquivo, ler_extrato, ler_lancamentos
 from core.modelo_excel import gerar_modelo
 from core.painel import dados_painel
 from core.security import init_security
@@ -62,6 +65,63 @@ def modelo_xlsx():
     return send_file(io.BytesIO(gerar_modelo()), as_attachment=True,
                      download_name="modelo_lancamentos_evhira.xlsx",
                      mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+LIMITE_ARQUIVO = 5 * 1024 * 1024  # por arquivo; o teto global de 10 MB fica em core/security.py
+CAMPOS = (("lancamentos", "lançamentos da contabilidade", ler_lancamentos), ("extrato", "extrato do banco", ler_extrato))
+
+
+def _json(dados, status=200):
+    resp = jsonify(dados)
+    resp.status_code = status
+    resp.headers["Cache-Control"] = "no-store"  # nada fica guardado, nem no navegador
+    return resp
+
+
+def _erro(mensagem, campo=None, status=400):
+    return _json({"erro": mensagem, "campo": campo}, status)
+
+
+@app.errorhandler(413)
+def arquivo_grande_demais(_):
+    return _erro("Os arquivos juntos passam de 10 MB. Envie arquivos menores, de até 5 MB cada.", None, 413)
+
+
+@app.get("/conferir")
+def conferir_tela():
+    return render_template("conferir.html", ativo="conferir", titulo="Conferir com o banco")
+
+
+@app.post("/conferir/processar")
+def conferir_processar():
+    lidos = {}
+    for campo, nome, leitor in CAMPOS:
+        arq = request.files.get(campo)
+        # le um byte a mais que o limite: o suficiente pra saber que estourou, sem trazer o arquivo todo
+        dados = arq.stream.read(LIMITE_ARQUIVO + 1) if arq else b""
+        if not dados:
+            return _erro(f"Falta o arquivo de {nome}.", campo)
+        if len(dados) > LIMITE_ARQUIVO:
+            return _erro(f"O arquivo de {nome} passa de 5 MB. Envie um arquivo menor.", campo, 413)
+        try:
+            lidos[campo] = leitor(dados)
+        except ErroArquivo as e:
+            return _erro(str(e), campo, 422)
+        except Exception as e:  # arquivo estranho que o leitor não previu: mensagem amiga, sem pilha e sem conteúdo
+            app.logger.error("falha ao ler %s: %s", campo, type(e).__name__)
+            return _erro("Não consegui abrir este arquivo. Confira se ele não está corrompido ou baixe o modelo.", campo, 422)
+    return _json(_resultado(lidos["lancamentos"], lidos["extrato"]))
+
+
+@app.post("/conferir/exemplo")
+def conferir_exemplo():
+    return _json(_resultado(*dados_exemplo()))
+
+
+def _resultado(lancamentos, extrato):
+    r = conferir(lancamentos, extrato)
+    r["origem"] = {"lancamentos": lancamentos["formato_nome"], "extrato": extrato["formato_nome"]}
+    return r
 
 
 @app.get("/health")

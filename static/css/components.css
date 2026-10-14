@@ -159,3 +159,74 @@
   .semanas { gap: 4px; }
   .sem-barras { gap: 3px; }
 }
+
+/* ---------- Conferir com o banco ---------- */
+.topbar .btn { white-space: nowrap; }
+.btn-secundario { border-color: var(--border); background: var(--bg-elev); color: var(--text); }
+.btn-secundario:hover { border-color: var(--accent); color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary:disabled:hover { background: var(--accent); }
+.cd-titulo i { color: var(--accent); margin-right: 4px; }
+
+.im-grade { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.im-bloco { min-width: 0; }
+.im-lbl { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-dim); }
+.im-drop {
+  display: block; padding: 28px 16px; text-align: center; cursor: pointer; user-select: none;
+  border: 2px dashed var(--border); border-radius: var(--radius); color: var(--text-dim);
+  transition: border-color var(--transicao), background var(--transicao), color var(--transicao);
+}
+.im-drop i { display: block; margin-bottom: 6px; font-size: 36px; }
+.im-drop:hover, .im-drop.over { border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--accent-hover); }
+.im-drop.loaded { border-style: solid; border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success); }
+.im-arq { display: block; margin-top: 6px; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.im-dica { display: block; margin-top: 6px; font-size: var(--fs-xs); color: var(--text-fraco); }
+.im-drop.loaded .im-dica { display: none; }
+.im-inp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.im-drop:has(+ .im-inp:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* a mensagem vem ANTES do botão no HTML e leva o margin-right:auto: é isso que encosta o botão na direita */
+.im-acao { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.im-acao .im-msg { margin-right: auto; font-size: 12.5px; color: var(--text-dim); }
+.im-msg:empty { display: none; }
+.im-acao .im-msg.ok { color: var(--success); font-weight: 600; }
+.im-acao .im-msg.erro { color: var(--danger); font-weight: 600; }
+
+.loading-inline { padding: 56px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.spinner-circle { width: 44px; height: 44px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: gira .8s linear infinite; }
+.loading-text { font-size: 14px; font-weight: 600; }
+.girando { display: inline-block; animation: gira .8s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+.vz-botao { margin-top: var(--sp-4); }
+
+#resultado > * + * { margin-top: var(--sp-3); }
+.resumo-frase { margin: 0; font-family: var(--font-titulo); font-size: var(--fs-xl); font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+
+.cf-tabs { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+.cf-tab {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px;
+  border: 0; border-bottom: 2px solid transparent; background: transparent; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--text-dim);
+}
+.cf-tab:hover { color: var(--text); }
+.cf-tab i { font-size: 18px; color: var(--c); }
+.cf-tab.ativo { color: var(--accent); border-bottom-color: var(--accent); }
+.cf-cont {
+  min-width: 24px; padding: 1px 8px; border-radius: 99px; text-align: center; font-size: 11.5px; font-weight: 700;
+  font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c);
+}
+.cf-pane > * + * { margin-top: var(--sp-3); }
+
+@media (max-width: 720px) {
+  .im-grade { grid-template-columns: 1fr; }
+  .im-drop { padding: 22px 14px; }
+  .resumo-frase { font-size: var(--fs-lg); }
+  .cf-tab { padding: 10px 11px; }
+}
+@media (max-width: 520px) {
+  .cf-tab span { font-size: 12.5px; }
+  .topbar .btn { white-space: nowrap; padding: 0 12px; }
+  .topbar .btn-primary i { display: none; }
+  .titulo-pagina { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .spinner-circle, .girando { animation-duration: 2s; } }
